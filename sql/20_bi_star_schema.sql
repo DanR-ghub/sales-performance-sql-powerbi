@@ -92,7 +92,13 @@ SELECT
   ot.items_gmv,
   ot.freight_total,
   (ot.items_gmv + ot.freight_total) AS gmv_plus_freight,
-  p.payment_total
+  p.payment_total,
+  o.order_purchase_timestamp,
+  o.order_delivered_customer_date,
+  o.order_estimated_delivery_date,
+  o.delivery_days,
+  o.delivery_vs_estimated_days AS delay_days,
+  (o.order_delivered_customer_date::date > o.order_estimated_delivery_date::date) AS is_late
 FROM clean.orders o
 LEFT JOIN order_totals ot USING (order_id)
 LEFT JOIN payments p USING (order_id)
